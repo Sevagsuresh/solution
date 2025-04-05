@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-blue: #2962ff;
+            --dark-bg: #0a192f;
+            --input-bg: #172a45;
+            --text-light: #ccd6f6;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a192f 0%, #020c1b 100%);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-box {
+            width: 440px;
+            padding: 48px;
+            background: rgba(11, 25, 48, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(41, 98, 255, 0.15);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-box:hover {
+            transform: translateY(-4px);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 40px;
+            color: var(--text-light);
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #8892b0;
+            font-weight: 500;
+            padding-left: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #233554;
+            border-radius: 10px;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input::placeholder {
+            color: #54617a;
+        }
+
+        input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(41, 98, 255, 0.15);
+            outline: none;
+            background: #1d3658;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1a237e 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(41, 98, 255, 0.25);
+        }
+
+        .captcha-section {
+            margin: 24px 0;
+            padding: 20px;
+            background: rgba(41, 98, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(41, 98, 255, 0.2);
+        }
+
+        .captcha-refresh {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .captcha-refresh button {
+            padding: 8px 12px;
+            background: rgba(41, 98, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: var(--primary-blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .captcha-refresh button:hover {
+            background: rgba(41, 98, 255, 0.3);
+        }
+
+        .messages {
+            padding: 16px;
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.2);
+            border-radius: 10px;
+            color: #ff5252;
+            font-size: 14px;
+            margin: 24px 0;
+            backdrop-filter: blur(4px);
+        }
+
+        p {
+            text-align: center;
+            color: #8892b0;
+            margin-top: 24px;
+        }
+
+        a {
+            color: var(--primary-blue);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #448aff;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                width: 90%;
+                padding: 32px;
+                margin: 20px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>WELCOME TO KERALA HEALTH</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter your credentials" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="captcha-section">
+                <label>Security Verification</label>
+                <div class="captcha-refresh">
+                    <img src="{% url 'captcha' %}?{% now 'U' %}" 
+                         alt="CAPTCHA" 
+                         onclick="this.src='{% url 'captcha' %}?' + Date.now()"
+                         style="border-radius: 8px; height: 40px;">
+                    <input type="text" name="captcha" 
+                           placeholder="Enter code" 
+                           required
+                           style="flex: 1; padding: 10px; background: var(--input-bg); color: var(--text-light);">
+                    <button type="button" onclick="this.previousElementSibling.src='{% url 'captcha' %}?' + Date.now()">
+                        ↻
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <p>New user? <a href="{% url 'register' %}">Request Access</a></p>
+    </div>
+</body>
+</html>

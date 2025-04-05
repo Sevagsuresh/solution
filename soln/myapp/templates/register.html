@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --container-bg: #121212;
+            --primary-color: #0066ff;
+            --text-color: #ffffff;
+            --input-bg: #1a1a1a;
+            --border-color: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #0052cc;
+        }
+
+        .error-list {
+            background-color: #330000;
+            border: 1px solid #660000;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .error-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .error-list li {
+            color: #ff6666;
+            font-size: 0.9rem;
+            padding: 0.25rem 0;
+        }
+
+        .valid-feedback {
+            color: #00cc66;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .invalid-feedback {
+            color: #ff4444;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .is-valid {
+            border-color: #00cc66 !important;
+            box-shadow: 0 0 0 2px rgba(0, 204, 102, 0.1);
+        }
+
+        .is-invalid {
+            border-color: #ff4444 !important;
+            box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.1);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 3px;
+            background: #333333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form method="POST" id="registrationForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username }}
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Username must be 4-20 characters</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+                <div class="valid-feedback">Valid email format!</div>
+                <div class="invalid-feedback">Please enter a valid email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1 }}
+                <div class="password-strength">
+                    <div class="strength-bar"></div>
+                </div>
+                <div class="invalid-feedback">
+                    Must contain: 8+ chars, uppercase, lowercase, number
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+                <div class="invalid-feedback">Passwords must match</div>
+                <p> Registerd user? <a href="{% url 'login' %}">Login</a></p>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        {% if form.errors %}
+            <div class="error-list">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field|capfirst }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Previous validation script remains the same
+        // Add redirect logic to login page
+        {% if form.is_valid %}
+            window.location.href = "{% url 'login' %}";
+        {% endif %}
+
+        // Password strength indicator
+        function validatePassword(password) {
+            const strength = {
+                0: { color: '#ff4444', width: '30%' },
+                1: { color: '#ffaa00', width: '50%' },
+                2: { color: '#00cc66', width: '80%' },
+                3: { color: '#00cc66', width: '100%' }
+            };
+
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+
+            return strength[Math.min(score, 3)];
+        }
+
+        document.getElementById('registrationForm').addEventListener('input', (e) => {
+            const target = e.target;
+            
+            if (target.matches('#id_username')) {
+                const isValid = target.value.length >= 4 && target.value.length <= 20;
+                toggleValidationState(target, isValid);
+            }
+
+            if (target.matches('#id_email')) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(target.value);
+                toggleValidationState(target, isValid);
+            }
+
+            if (target.matches('#id_password1')) {
+                const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(target.value);
+                const strength = validatePassword(target.value);
+                document.querySelector('.strength-bar').style.cssText = `
+                    width: ${strength.width};
+                    background: ${strength.color};
+                `;
+                toggleValidationState(target, isValid);
+            }
+
+            if (target.matches('#id_password2')) {
+                const password1 = document.getElementById('id_password1').value;
+                const isValid = target.value === password1;
+                toggleValidationState(target, isValid);
+            }
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+            let isValid = true;
+            
+            const username = document.getElementById('id_username');
+            if (username.value.length < 4 || username.value.length > 20) {
+                toggleValidationState(username, false);
+                isValid = false;
+            }
+
+            const email = document.getElementById('id_email');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                toggleValidationState(email, false);
+                isValid = false;
+            }
+
+            const password1 = document.getElementById('id_password1');
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password1.value)) {
+                toggleValidationState(password1, false);
+                isValid = false;
+            }
+
+            const password2 = document.getElementById('id_password2');
+            if (password2.value !== password1.value) {
+                toggleValidationState(password2, false);
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fix the errors before submitting');
+            }
+        });
+
+        function toggleValidationState(element, isValid) {
+            element.classList.remove('is-valid', 'is-invalid');
+            element.classList.add(isValid ? 'is-valid' : 'is-invalid');
+            
+            const feedback = element.parentNode.querySelector(isValid ? '.valid-feedback' : '.invalid-feedback');
+            Array.from(element.parentNode.querySelectorAll('.valid-feedback, .invalid-feedback'))
+                .forEach(fb => fb.style.display = 'none');
+            
+            if (feedback) feedback.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

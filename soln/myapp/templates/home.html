@@ -1,0 +1,401 @@
+{% load post_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Kerala Health</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(45deg, #004d40, #00796b);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5em;
+            text-align: center;
+            flex: 1;
+        }
+        
+        /* Hamburger icon */
+        .hamburger {
+            font-size: 1.8em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: linear-gradient(45deg, #004d40, #00796b);
+            color: white;
+            transition: 0.3s;
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 1100;
+        }
+        
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+        
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Close button */
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            padding: 10px;
+            cursor: pointer;
+            text-align: right;
+            width: 100%;
+        }
+        
+        /* Show sidebar */
+        .sidebar.show {
+            left: 0;
+        }
+        
+        /* Adjust container */
+        .container {
+            max-width: 800px;
+            margin: 80px auto 0; /* Adjusted for fixed navbar */
+            padding: 20px;
+        }
+        
+        /* Original page styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .admin-link {
+            display: inline-block;
+            background: #1877f2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        
+        /* Updated post container style for a professional look */
+        .post {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-left: 5px solid #00796b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .post-author {
+            font-weight: bold;
+            color: #1877f2;
+        }
+        
+        .post-time {
+            color: #65676b;
+            font-size: 0.9em;
+        }
+        
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .media-container {
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .media-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .interactions {
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        
+        .like-btn {
+            background: none;
+            border: none;
+            color: #1877f2;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .like-btn:hover {
+            background: rgba(24, 119, 242, 0.1);
+        }
+        
+        .comments-section {
+            margin-top: 15px;
+        }
+        
+        .comment {
+            background: #f0f2f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .comment-author {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .comment-text {
+            margin: 5px 0;
+        }
+        
+        .comment-time {
+            color: #65676b;
+            font-size: 0.8em;
+        }
+        
+        .comment-form {
+            margin-top: 15px;
+        }
+        
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        
+        .btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .btn:hover {
+            background: #166fe5;
+        }
+        
+        .no-posts {
+            text-align: center;
+            color: #65676b;
+            padding: 40px 0;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #00796b;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+        }
+
+        .fab:hover {
+            background: #004d40;
+            transform: scale(1.1);
+        }
+
+        .fab i {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <h1>Kerala Health</h1>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">✖</button>
+        {% comment %} <a href="#">Profile</a> {% endcomment %}
+        <!-- Logout link with next parameter -->
+        <a href="{% url 'logout' %}?next={% url 'login' %}">Logout</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Kerala Health</h1>
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'admin_dashboard' %}" class="admin-link">Go to Admin Dashboard</a>
+            {% endif %}
+        </div>
+
+        {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <span class="post-author">
+                    {% if post.user.is_staff %}
+                        🌟 Admin
+                    {% else %}
+                        {{ post.user.username }}
+                    {% endif %}
+                </span>
+                <span class="post-time">{{ post.created_at|date:"F j, Y · g:i a" }}</span>
+            </div>
+
+            {% if post.content %}
+            <div class="post-content">
+                {{ post.content }}
+            </div>
+            {% endif %}
+
+            {% if post.youtube_url or post.image or post.video_file %}
+            <div class="media-container">
+                {% if post.youtube_url %}
+                    <iframe
+                        width="100%"
+                        height="400"
+                        src="{{ post.get_embed_url }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                {% endif %}
+
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Post image">
+                {% endif %}
+
+                {% if post.video_file %}
+                    <video width="100%" controls>
+                        <source src="{{ post.video_file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="interactions">
+                <form method="POST" action="{% url 'like_post' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="like-btn">
+                        {% if user.is_authenticated and post|has_liked:user %}
+                            👍 Liked
+                        {% else %}
+                            👍 Like
+                        {% endif %}
+                        <span>({{ post.likes.count }})</span>
+                    </button>
+                </form>
+
+                <div class="comments-section">
+                    <h3>Comments ({{ post.comments.count }})</h3>
+
+                    {% for comment in post.comments.all %}
+                    <div class="comment">
+                        <div class="comment-author">{{ comment.user.username }}</div>
+                        <div class="comment-text">{{ comment.text }}</div>
+                        <div class="comment-time">{{ comment.created_at|date:"F j, Y · g:i a" }}</div>
+                    </div>
+                    {% endfor %}
+
+                    {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'add_comment' post.id %}" class="comment-form">
+                        {% csrf_token %}
+                        <textarea name="text" placeholder="Write a comment..." required></textarea>
+                        <button type="submit" class="btn">Post Comment</button>
+                    </form>
+                    {% else %}
+                    <p><a href="{% url 'login' %}">Login</a> to comment</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-posts">
+            <p>No posts available yet.</p>
+            {% if user.is_authenticated and user.is_staff %}
+            <p><a href="{% url 'admin_dashboard' %}">Create your first post</a></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Floating Action Button -->
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'admin_dashboard' %}" class="fab" title="Create New Post">
+        ＋
+    </a>
+    {% endif %}
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("show");
+        }
+    </script>
+</body>
+</html>
