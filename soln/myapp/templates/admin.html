@@ -19,6 +19,183 @@
             background: #f1f5f9;
             color: #334155;
         }
+        .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    
+    .dashboard-header p {
+        color: #7f8c8d;
+        font-size: 1rem;
+    }
+    
+    .stats-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        flex: 1;
+        min-width: 200px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-card h3 {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .stat-card .stat-trend {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .trend-up {
+        color: #2ecc71;
+    }
+    
+    .trend-down {
+        color: #e74c3c;
+    }
+    
+    .charts-container {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .chart-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .chart-container canvas {
+        max-width: 100%;
+    }
+    
+    .engagement-metrics {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .engagement-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+    }
+    
+    .engagement-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .ratio-container {
+        height: 200px;
+        position: relative;
+    }
+    
+    .bottom-section {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .comments-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .comments-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .gradient-blue {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+    
+    .gradient-green {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+    
+    .gradient-purple {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    }
+    
+    .gradient-orange {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+    }
+    
+    .white-text {
+        color: white !important;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-container, .charts-container, .engagement-metrics, .bottom-section {
+            flex-direction: column;
+        }
+    }
 
         /* Navigation */
         .admin-header {
@@ -162,74 +339,45 @@
     </header>
 
     <main class="container">
-        <!-- Create Post Form -->
-        <div class="card">
-            <h2 style="margin-top: 0;">Create New Post</h2>
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label class="form-label">Content</label>
-                    {{ form.content }}
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">YouTube URL</label>
-                    {{ form.youtube_url }}
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Image Upload</label>
-                    {{ form.image }}
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Video Upload</label>
-                    {{ form.video_file }}
-                </div>
-
-                <button type="submit" class="btn" style="background: var(--primary); color: white;">
-                    Publish Post
-                </button>
-            </form>
+        <div class="dashboard-header">
+            <h3>Post Analytics</h3>
+            <p>Track your performance metrics and engagement</p>
         </div>
-
-        <!-- Posts List -->
-        <h2>Recent Posts</h2>
-        {% for post in posts %}
-        <div class="post-card">
-            <form class="delete-form" method="POST" action="{% url 'delete_post' post.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
-
-            <p>{{ post.content }}</p>
-
-            {% if post.youtube_url %}
-            <div class="video-container">
-                <iframe width="100%" height="400" src="{{ post.get_embed_url }}" 
-                    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen></iframe>
+        <div class="stats-container">
+            <div class="stat-card gradient-green">
+                <a href="{% url 'manage_post' %}" style="text-decoration: none;">
+                    <h3 class="white-text">Manage Post</h3>
+                </a>
             </div>
-            {% endif %}
+            <div class="stat-card gradient-orange">
+                <a href="{% url 'create_event' %}" style="text-decoration: none;">
+                    <h3 class="white-text">Mange Event Announcement</h3>
+                </a>
+            </div>
+            <div class="stat-card gradient-blue">
+                <a href="{% url 'poll_list' %}" style="text-decoration: none;">
+                <h3 class="white-text">Mange Polls</h3>
+               </a>
+            </div>
+            <div class="stat-card gradient-purple">
+                <a href="{% url 'create_poll' %}"  style="text-decoration: none;">
+                <h3 class="white-text">Pandamic Safe Aware Poll</h3>
+            </a>
+            </div>
+            <div class="stat-card gradient-purple">
+                <a href="{% url 'manage_oxygen' %}" style="text-decoration: none;">
+                <h3 class="white-text">Mange Oxygen Avilability  Districts List</h3>
+            </a>
+            </div>
+            <div class="stat-card gradient-purple">
+                <a href="{% url 'admin_user_list' %}" style="text-decoration: none;">
+                    <h3 class="white-text">View Users</h3>
 
-            {% if post.image %}
-                <img src="{{ post.image.url }}" alt="Post image" class="media-preview">
-            {% endif %}
-
-            {% if post.video_file %}
-                <video controls class="media-preview" style="width: 100%">
-                    <source src="{{ post.video_file.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% endif %}
-
-            <div class="post-meta">
-                <span>{{ post.created_at|date:"M d, Y H:i" }}</span>
+                </a>
             </div>
         </div>
-        {% endfor %}
+
+       
     </main>
 
     <script>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Pandemic Polls</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f7f9;
+            padding: 30px;
+        }
+        .poll-form, .poll-list {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #333;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        .actions button {
+            margin-right: 5px;
+            background: #6c757d;
+        }
+        .actions .edit {
+            background: #ffc107;
+        }
+        .actions .delete {
+            background: #dc3545;
+        }
+        .actions .report {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poll-form">
+        <h2>Create New Pandemic Poll</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Poll Title:</label>
+            <input type="text" name="title" required>
+
+            <label>Question:</label>
+            <textarea name="question" required></textarea>
+
+            <button type="submit">Create Poll</button>
+        </form>
+    </div>
+
+    <div class="poll-list">
+        <h2>Existing Polls</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Question</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+            {% for poll in polls %}
+            <tr>
+                <td>{{ poll.id }}</td>
+                <td>{{ poll.title }}</td>
+                <td>{{ poll.question }}</td>
+                <td>{{ poll.created_at }}</td>
+                <td class="actions">
+                    <a href="{% url 'edit_poll' poll.id %}"><button class="edit">Edit</button></a>
+                    <a href="{% url 'delete_poll' poll.id %}" onclick="return confirm('Are you sure?')"><button class="delete">Delete</button></a>
+                    <a href="{% url 'poll_report' %}?poll_id={{ poll.id }}"><button class="report">View Report</button></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No polls created yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

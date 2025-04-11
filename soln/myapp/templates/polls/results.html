@@ -1,0 +1,41 @@
+<div class="results-box">
+    <h2>{{ poll.question }}</h2>
+    <div class="result-bar">
+        <span class="label">Agree</span>
+        <div class="bar" style="width: {{ agree|floatformat:2|divisibleby:total|mul:100 }}%">{{ agree }}</div>
+    </div>
+    <div class="result-bar">
+        <span class="label">Disagree</span>
+        <div class="bar disagree" style="width: {{ disagree|floatformat:2|divisibleby:total|mul:100 }}%">{{ disagree }}</div>
+    </div>
+    <p>Total responses: {{ total }}</p>
+</div>
+
+<style>
+.results-box {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.result-bar {
+    margin: 20px 0;
+}
+.result-bar .label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.bar {
+    background: #6c63ff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+.bar.disagree {
+    background: #e74c3c;
+}
+</style>
+    

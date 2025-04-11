@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poll: {{ poll.title }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            padding: 40px;
+        }
+        .poll-box {
+            background: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #222;
+        }
+        label, select, input[type="text"] {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        select, input[type="text"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="poll-box">
+    <h2>{{ poll.question }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Your Answer:</label>
+        <select name="answer" required>
+            <option value="">-- Select --</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+
+        <label>District:</label>
+        <input type="text" name="district" placeholder="e.g., Kozhikode" required>
+
+        <label>Place:</label>
+        <input type="text" name="place" placeholder="e.g., Koppam" required>
+
+        <button type="submit">Submit Response</button>
+    </form>
+</div>
+</body>
+</html>

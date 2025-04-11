@@ -1,0 +1,30 @@
+<div class="vote-container">
+    <h2>{{ poll.question }}</h2>
+    {% if has_responded %}
+        <p>You have already responded to this poll. <a href="{% url 'normal_poll_results' poll.id %}">View Results</a></p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <label>
+                <input type="radio" name="response" value="agree"> Agree
+            </label><br>
+            <label>
+                <input type="radio" name="response" value="disagree"> Disagree
+            </label><br><br>
+            <button type="submit" class="btn vote-btn">Submit</button>
+        </form>
+    {% endif %}
+</div>
+
+<style>
+.vote-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+.vote-container h2 {
+    margin-bottom: 20px;
+}
+</style>

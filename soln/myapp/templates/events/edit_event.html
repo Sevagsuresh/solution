@@ -1,0 +1,65 @@
+<style>
+    body {
+        background: #f5f7fa;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 2rem;
+    }
+
+    .form-container {
+        background: white;
+        max-width: 600px;
+        margin: auto;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+
+    button {
+        background: #1e90ff;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1476d1;
+    }
+</style>
+<div class="form-container">
+    <h2>Edit Health Event</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Title: <input type="text" name="title" value="{{ event.title }}" required></label><br>
+        <label>Description: <textarea name="description" required>{{ event.description }}</textarea></label><br>
+        <label>Start Time: <input type="datetime-local" name="start_time" value="{{ event.start_time|date:'Y-m-d\\TH:i' }}" required></label><br>
+        <label>End Time: <input type="datetime-local" name="end_time" value="{{ event.end_time|date:'Y-m-d\\TH:i' }}" required></label><br>
+        <label>Place: <input type="text" name="place" value="{{ event.place }}" required></label><br>
+        <label>Panchayath: <input type="text" name="panchayath" value="{{ event.panchayath }}" required></label><br>
+        <label>District: <input type="text" name="district" value="{{ event.district }}" required></label><br>
+        <button type="submit">Update Event</button>
+    </form>
+    <a href="{% url 'event_list' %}">⬅ Back to Events</a>

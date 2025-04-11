@@ -1,0 +1,37 @@
+<h2 class="title">🗳️ Available Normal Polls</h2>
+<div class="poll-list">
+    {% for poll in polls %}
+        <div class="poll-card">
+            <h3>{{ poll.question }}</h3>
+            <a href="{% url 'normal_poll_vote' poll.id %}" class="btn vote-btn">Vote</a>
+            <a href="{% url 'normal_poll_results' poll.id %}" class="btn result-btn">Results</a>
+        </div>
+    {% empty %}
+        <p>No polls available at the moment.</p>
+    {% endfor %}
+</div>
+
+<style>
+.title { text-align: center; margin-bottom: 30px; }
+.poll-card {
+    background: #fff;
+    padding: 20px;
+    margin: 15px auto;
+    border-radius: 8px;
+    max-width: 700px;
+    border-left: 5px solid #6c63ff;
+    box-shadow: 0 0 12px rgba(0,0,0,0.08);
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #6c63ff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.result-btn {
+    background-color: #4CAF50;
+}
+</style>

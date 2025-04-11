@@ -1,0 +1,57 @@
+<h2 class="event-header">📢 Upcoming Health Events</h2>
+<div class="event-list">
+    {% for event in events %}
+    <div class="event-card">
+        <h3>{{ event.title }}</h3>
+        <p>{{ event.description }}</p>
+        <p><strong>Date:</strong> {{ event.start_time|date:"M d, Y H:i" }} → {{ event.end_time|date:"H:i" }}</p>
+        <p><strong>Place:</strong> {{ event.place }}, {{ event.panchayath }}, {{ event.district }}</p>
+
+        {% with event.feedbacks.all as feedbacks %}
+        <div class="feedback-box">
+            <form action="{% url 'event_like' event.id %}" method="post" style="display:inline">
+                {% csrf_token %}
+                <button type="submit" class="like-btn">👍 {{ feedbacks|filter:{"response": "like"}|length }}</button>
+            </form>
+            <form action="{% url 'event_dislike' event.id %}" method="post" style="display:inline">
+                {% csrf_token %}
+                <button type="submit" class="dislike-btn">👎 {{ feedbacks|filter:{"response": "dislike"}|length }}</button>
+            </form>
+        </div>
+        {% endwith %}
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.event-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.event-card {
+    background: #fff;
+    border-left: 5px solid #007bff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.feedback-box {
+    margin-top: 10px;
+}
+.like-btn, .dislike-btn {
+    background-color: #eee;
+    border: none;
+    padding: 8px 16px;
+    margin-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.like-btn:hover { background: #d4edda; }
+.dislike-btn:hover { background: #f8d7da; }
+</style>

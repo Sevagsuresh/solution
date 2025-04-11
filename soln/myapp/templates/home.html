@@ -180,7 +180,23 @@
         .like-btn:hover {
             background: rgba(24, 119, 242, 0.1);
         }
+        .dislike-btn {
+            background: none;
+            border: none;
+            color: #1877f2;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
         
+        .dislike-btn:hover {
+            background: rgba(24, 119, 242, 0.1);
+        }
+    
         .comments-section {
             margin-top: 15px;
         }
@@ -283,6 +299,10 @@
         <button class="close-btn" onclick="toggleSidebar()">✖</button>
         {% comment %} <a href="#">Profile</a> {% endcomment %}
         <!-- Logout link with next parameter -->
+        <a href="{% url 'view_oxygen' %}" > View Oxygen Availability</a>
+        <a href="{% url 'user_normal_poll_list' %}" >Polls</a>
+        <a href="/pandemic-polls/">Pandemic Polls</a> 
+        <a href="{% url 'event_list' %}"> View Health Events</a>
         <a href="{% url 'logout' %}?next={% url 'login' %}">Logout</a>
     </div>
 
@@ -305,6 +325,9 @@
                     {% endif %}
                 </span>
                 <span class="post-time">{{ post.created_at|date:"F j, Y · g:i a" }}</span>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'post_detail' post.id %}#analytics">View Post Analytics</a>
+        {% endif %}
             </div>
 
             {% if post.content %}
@@ -352,6 +375,18 @@
                     </button>
                 </form>
 
+                <form method="POST" action="{% url 'dislike_post' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dislike-btn">
+                        {% if user.is_authenticated and post|has_disliked:user %}
+                            👎 Disliked
+                        {% else %}
+                            👎 Dislike
+                        {% endif %}
+                        <span>({{ post.dislikes.count }})</span>
+                    </button>
+                </form>
+
                 <div class="comments-section">
                     <h3>Comments ({{ post.comments.count }})</h3>
 
@@ -360,6 +395,20 @@
                         <div class="comment-author">{{ comment.user.username }}</div>
                         <div class="comment-text">{{ comment.text }}</div>
                         <div class="comment-time">{{ comment.created_at|date:"F j, Y · g:i a" }}</div>
+                        {% if comment.reply %}
+        <div class="comment-reply">
+            <strong>Admin reply:</strong> {{ comment.reply }}
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated and user.is_staff %}
+        <form method="POST" action="{% url 'reply_to_comment' comment.id %}" class="reply-form">
+            {% csrf_token %}
+            <textarea name="reply" placeholder="Reply to this comment..." required>{{ comment.reply }}</textarea>
+            <button type="submit">Reply</button>
+        </form>
+        {% endif %}
+                       
                     </div>
                     {% endfor %}
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Poll</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            padding: 40px;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Edit Poll</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Poll Title:</label>
+        <input type="text" name="title" value="{{ poll.title }}" required>
+
+        <label>Poll Question:</label>
+        <textarea name="question" required>{{ poll.question }}</textarea>
+
+        <button type="submit">Update Poll</button>
+    </form>
+</div>
+</body>
+</html>

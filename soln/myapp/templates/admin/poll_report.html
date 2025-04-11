@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poll Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            padding: 40px;
+        }
+        .report-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .unsafe {
+            background-color: #ffe6e6;
+            color: #b30000;
+        }
+        .safe {
+            background-color: #e6ffec;
+            color: #006600;
+        }
+    </style>
+</head>
+<body>
+<div class="report-box">
+    <h2>Report for: {{ poll.title }}</h2>
+    <table>
+        <tr>
+            <th>District</th>
+            <th>Place</th>
+            <th>Status</th>
+            <th>Submitted At</th>
+        </tr>
+        {% for response in responses %}
+        <tr class="{% if response.answer == 'No' %}unsafe{% else %}safe{% endif %}">
+            <td>{{ response.district }}</td>
+            <td>{{ response.place }}</td>
+            <td>{{ response.answer }}</td>
+            <td>{{ response.created_at }}</td>
+        </tr>
+        {% endfor %}
+        {% if responses|length == 0 %}
+        <tr>
+            <td colspan="4">No responses yet.</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+</body>
+</html>

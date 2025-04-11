@@ -1,0 +1,352 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+        background-color: #f5f7fa;
+        color: #333;
+        padding: 2rem;
+    }
+    
+    .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .dashboard-header h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    
+    .dashboard-header p {
+        color: #7f8c8d;
+        font-size: 1rem;
+    }
+    
+    .stats-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        flex: 1;
+        min-width: 200px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-card h3 {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .stat-card .stat-trend {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .trend-up {
+        color: #2ecc71;
+    }
+    
+    .trend-down {
+        color: #e74c3c;
+    }
+    
+    .charts-container {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .chart-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .chart-container canvas {
+        max-width: 100%;
+    }
+    
+    .engagement-metrics {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .engagement-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+    }
+    
+    .engagement-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .ratio-container {
+        height: 200px;
+        position: relative;
+    }
+    
+    .bottom-section {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .comments-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .comments-card h3 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .gradient-blue {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+    
+    .gradient-green {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+    
+    .gradient-purple {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    }
+    
+    .gradient-orange {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+    }
+    
+    .white-text {
+        color: white !important;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-container, .charts-container, .engagement-metrics, .bottom-section {
+            flex-direction: column;
+        }
+    }
+</style>
+{% if user.is_authenticated and user.is_staff %}
+<div class="dashboard-header">
+    <h3>Post Analytics</h3>
+    <p>Track your performance metrics and engagement</p>
+</div>
+<div class="stats-container">
+    <div class="stat-card gradient-green">
+        <h3 class="white-text">Total Likes</h3>
+        <div class="stat-value white-text">{{total_likes}}</div>
+        <div class="stat-trend white-text">
+            <span>↑ from last week: {{ recent_likes }}</span>
+        </div>
+    </div>
+    <div class="stat-card gradient-orange">
+        <h3 class="white-text">Total Dislikes</h3>
+        <div class="stat-value white-text">{{ total_dislikes }}</div>
+        <div class="stat-trend white-text">
+            <span>↑ from last week: {{ recent_dislikes }}</span>
+        </div>
+    </div>
+    <div class="stat-card gradient-blue">
+        <h3 class="white-text">Total Comments</h3>
+        <div class="stat-value white-text">{{ total_comments }}</div>
+        <div class="stat-trend white-text">
+            <span>↑ from last week: {{ recent_comments }}</span>
+        </div>
+    </div>
+    <div class="stat-card gradient-purple">
+        <h3 class="white-text">Engagement Rate</h3>
+        <div class="stat-value white-text">{{ engagement_rate }}</div>
+        <div class="stat-trend white-text">
+            <span>Calculated from likes, dislikes, and comments</span>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<div class="charts-container">
+    <div class="chart-card">
+        <h3>Like/Dislike Ratio Overall Overview</h3>
+        <div class="chart-container">
+            <canvas id="overallChart" width="175" height="175"></canvas>
+        </div>
+    </div>
+    
+    <div class="chart-card">
+        <h3>Like/Dislike Ratio weekly Overview</h3>
+        <div class="chart-container">
+            <canvas id="weeklyChart" width="130" height="130"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Containers -->
+<!-- <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px;">
+    <div>
+        <canvas id="overallChart" width="175" height="175"></canvas>
+        <p style="text-align: center;">Overall</p>
+    </div>
+    <div>
+        <canvas id="weeklyChart" width="130" height="130"></canvas>
+        <p style="text-align: center;">Last 7 Days</p>
+    </div>
+</div> -->
+
+<!-- Horizontal Bar for Comments -->
+<div class="charts-container">
+    <div class="chart-card">
+        <h3>Comments Overall/weekly Overview</h3>
+        <div class="chart-container">
+            <canvas id="commentBar"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Scripts -->
+<script>
+const overallCtx = document.getElementById('overallChart').getContext('2d');
+Chart.register(ChartDataLabels);    
+const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+const commentBarCtx = document.getElementById('commentBar').getContext('2d');
+
+new Chart(overallCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Likes', 'Dislikes'],
+        datasets: [{
+            label: 'Overview',
+            data: [{{ total_likes }}, {{ total_dislikes }}],
+            backgroundColor: ['#4CAF50', '#F44336'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#333',
+                    font: {
+                        size: 14,
+                    }
+                }
+            },
+            datalabels: {
+                color: '#fff',
+                formatter: (value, context) => {
+                    let total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    let percentage = ((value / total) * 100).toFixed(1);
+                    return `${percentage}%`;
+                },
+                font: {
+                    weight: 'bold',
+                    size: 12,
+                }
+            }
+        }
+    }
+
+});
+
+new Chart(weeklyCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Likes (7d)', 'Dislikes (7d)'],
+        datasets: [{
+            label: 'Last 7 Days',
+            data: [{{ recent_likes }}, {{ recent_dislikes }}],
+            backgroundColor: ['#81C784', '#E57373'],
+        }]
+    },
+    options: {
+        plugins: { legend: { display: true} }
+    }
+});
+
+new Chart(commentBarCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Total Comments', 'Recent Comments (7d)'],
+        datasets: [{
+            label: 'Comments',
+            data: [{{ total_comments }}, {{ recent_comments }}],
+            backgroundColor: ['#2196F3', '#64B5F6'],
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        scales: {
+            x: { beginAtZero: true }
+        }
+    }
+});
+</script>
+{% endif %}

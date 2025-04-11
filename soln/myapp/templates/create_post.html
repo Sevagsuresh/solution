@@ -1,0 +1,167 @@
+{% load post_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Post</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --accent: #6366F1;
+      --bg: #f9fafc;
+      --text: #1f2937;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      padding: 2rem;
+      color: var(--text);
+    }
+
+    .card {
+      background: #fff;
+      max-width: 700px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      gap: 10px;
+    }
+
+    .tab-button {
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      background: #e0e7ff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: block;
+      margin: auto;
+      margin-top: 1.5rem;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Create New Post</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Content</label>
+        {{ form.content }}
+      </div>
+
+      <div class="tabs">
+        <button type="button" class="tab-button active" onclick="showTab('youtube')">YouTube</button>
+        <button type="button" class="tab-button" onclick="showTab('image')">Image</button>
+        <button type="button" class="tab-button" onclick="showTab('video')">Video</button>
+      </div>
+
+      <div id="youtube" class="tab-content active">
+        <div class="form-group">
+          <label class="form-label">YouTube URL</label>
+          {{ form.youtube_url }}
+        </div>
+      </div>
+
+      <div id="image" class="tab-content">
+        <div class="form-group">
+          <label class="form-label">Upload Image</label>
+          {{ form.image }}
+        </div>
+      </div>
+
+      <div id="video" class="tab-content">
+        <div class="form-group">
+          <label class="form-label">Upload Video</label>
+          {{ form.video_file }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn">Publish Post</button>
+    </form>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-button');
+
+      contents.forEach(c => c.classList.remove('active'));
+      buttons.forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

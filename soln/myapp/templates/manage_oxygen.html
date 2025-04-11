@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Oxygen Availability</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f1f4f9;
+            padding: 2rem;
+        }
+
+        .dashboard-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .table thead {
+            background: #3f51b5;
+            color: #fff;
+        }
+
+        .table td input {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 0.4rem 0.6rem;
+        }
+
+        h2.title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4CAF50, #2196F3);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #388E3C, #1976D2);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f2f9ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container dashboard-container">
+    <h2 class="title">🧪 Manage Oxygen Availability - Kerala Districts</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>District</th>
+                        <th>Capacity (MT)</th>
+                        <th>Demand (MT/day)</th>
+                        <th>Availability (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        <td><strong>{{ item.district }}</strong></td>
+                        <td>
+                            <input type="number" step="0.01" name="cap_{{ item.id }}" value="{{ item.capacity_mt }}"
+                                   oninput="recalculate({{ item.id }})" id="cap_{{ item.id }}">
+                        </td>
+                        <td>
+                            <input type="number" step="0.01" name="demand_{{ item.id }}" value="{{ item.demand_mt_per_day }}"
+                                   oninput="recalculate({{ item.id }})" id="demand_{{ item.id }}">
+                        </td>
+                        <td>
+                            <input type="text" name="avail_{{ item.id }}" id="avail_{{ item.id }}" 
+                                   value="{{ item.availability_percent }}" readonly>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">💾 Update Data</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function recalculate(id) {
+    const cap = parseFloat(document.getElementById(`cap_${id}`).value) || 0;
+    const demand = parseFloat(document.getElementById(`demand_${id}`).value) || 0;
+    const availInput = document.getElementById(`avail_${id}`);
+
+    if (cap > 0) {
+        const avail = ((cap - demand) / cap) * 100;
+        availInput.value = avail.toFixed(2);
+    } else {
+        availInput.value = "0.00";
+    }
+}
+</script>
+
+</body>
+</html>
